@@ -1,22 +1,38 @@
+
 import cv2
-import streamlit as st
-import torch
 import numpy as np
+from PIL import Image
+import av
+import streamlit as st
+from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
+import torch
 
-st.title("Webcam Live Feed")
-run = st.button('Run')
-FRAME_WINDOW = st.image([])
-model = torch.hub.load('./yolov5/', 'custom', path='my_face_detection_model.pt', source='local') 
+RTC_CONFIGURATION = RTCConfiguration(
+    {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
+)
 
-camera = cv2.VideoCapture(0)
-while run:
-    _, frame = camera.read()
-    result = model(frame)
-    ret,buffer=cv2.imencode('.jpg',  np.squeeze(result.render()))
-    image = cv2.imdecode(buffer, cv2.IMREAD_COLOR)
-    frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    FRAME_WINDOW.image(frame)
+st.model = torch.hub.load('./yolov5/', 'custom', path='my_face_detection_model.pt', source='local')
 
+class VideoProcessor:
+    def recv(self, frame):
+        img = frame.to_ndarray(format="bgr24")
+        # img = process(img)
 
-if st.button("stop camera"):
-    camera.release()
+         # vision processing
+        flipped = img[:, ::-1, :]
+
+        # model processing
+        im_pil = Image.fromarray(flipped)
+        results = st.model(im_pil)
+        bbox_img = np.array(results.render()[0])
+
+        return av.VideoFrame.from_ndarray(bbox_img, format="bgr24")
+    
+webrtc_ctx = webrtc_streamer(
+    key="WYH",
+    mode=WebRtcMode.SENDRECV,
+    rtc_configuration=RTC_CONFIGURATION,
+    media_stream_constraints={"video": True, "audio": False},
+    video_processor_factory=VideoProcessor,
+    async_processing=True,
+)
