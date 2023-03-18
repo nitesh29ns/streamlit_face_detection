@@ -11,7 +11,9 @@ RTC_CONFIGURATION = RTCConfiguration(
     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 )
 
-st.model = torch.hub.load('./yolov5/', 'custom', path='my_face_detection_model.pt', source='local')
+#st.model = torch.hub.load('./yolov5/', 'custom', path='my_face_detection_model.pt', source='local')
+if not hasattr(st, 'classifier'):
+    st.model = torch.hub.load('ultralytics/yolov5', 'yolov5s',  _verbose=False)
 
 class VideoProcessor:
     def recv(self, frame):
