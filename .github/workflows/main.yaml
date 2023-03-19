@@ -54,6 +54,6 @@ jobs:
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: face-detection
           environment_name: Facedetectionenv-env
-          version_label: "face-detection-${{ steps.format-time.outputs.replaced }}"
+          version_label: "face-detection"
           region: us-east-2
           deployment_package: deploy.zip
