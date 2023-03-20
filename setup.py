@@ -3,7 +3,7 @@ from typing import List
 
 #declaring variables for setup funcations
 PROJECT_NAME= "face-detection"
-VERSION="0.0.1"
+VERSION="Sample Application"
 AUTHOR="Nitesh Sharma"
 DESCRIPTION="my face detection yolov5 model"
 REQUIREMENT_FILE_NAME="requirements.txt"
