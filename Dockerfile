@@ -4,6 +4,7 @@ WORKDIR  /aap
 
 COPY . ./
 COPY requirements.txt ./requirements.txt
+COPY yolov5 ./yolov5
 
 RUN pip install -r requirements.txt 
 EXPOSE 8501
