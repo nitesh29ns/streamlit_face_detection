@@ -15,7 +15,9 @@ if st.button("yolov5s"):
     st.model = torch.hub.load('ultralytics/yolov5', 'yolov5s',  _verbose=False)
 
 if st.button("custom_model"):
-    st.model = torch.hub.load('./yolov5/', 'custom', path='my_face_detection_model.pt', source='local')
+    #st.model = torch.hub.load('yolov5/', 'custom', path='my_face_detection_model.pt', source='local')
+    st.model  = torch.hub.load('ultralytics/yolov5', 'custom', path='my_face_detection_model.pt', force_reload=True) 
+
 
 class VideoProcessor(VideoProcessorBase):
     def recv(self, frame):
